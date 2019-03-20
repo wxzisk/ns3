@@ -1,0 +1,41 @@
+tcp-l4-protocol.cc 含有setRtt函数
+
+\\10.0.2.1\LabShareFolder
+
+microcode：微码，将机器指令和相关的电路实现分离，使得机器指令可以更自由的进行设计和修改
+FCoE：以太网光纤通道（Fiber Channel over Ethernet）是一种计算机网络技术，通过以太网网络封装光纤通道帧
+RoCE(RDMA over Converged Ethernet)是一种允许通过以太网使用远程直接内存访问(RDMA)的网络协议
+INFRA：Infrastructure模式无线局域网是指通过AP互连工作模式，把AP看做传统局域网中集线器功能
+LACP：Link Aggregation Control Protocol，向链路发送LACPDU Frame使得链路两端能发现它们之间的多条链路
+FLR：function level reset
+IQ：当报文到时，把描述符加入到IQ中
+FQ：用来管理顺序进行保序
+SOP:start of packet
+EOP:end of packet
+SGE: Scatter/Gather Element,DMA操作内存单元
+iWARP:Internet Wide Area RDMA Protocol 一种用于远程直接内存访问、远程直接数据放置的保护协议，它淘汰了两端的网卡，也是一种标准的协议。 
+
+两种基于以太网的RDMA协议：
+以太网->IP->UDP->RoCE
+以太网->IP->TCP(去掉TCP/IP流量控制)->iWARP
+
+TSO：TCP Segment Offload，当TCP下发大数据包时，会逐渐整数倍数地增大MSS，网卡收到IP传下的大数据包，会重分成多个IP包，复制TCP包头，重计算checksum，组织IP包头，即是把一部分CPU的相关工作转移到了网卡
+Skb：Struct sk_buffer是TCP/IP堆栈中用于收发包的缓冲区域。数据包进入网卡驱动后拷贝一次，从内核空间递交给用户空间应用的时候再拷贝一次。网络中所有包的封装和解封都是通过这个结构进行的。
+PDCP：Packet Data Convergence Protocol 分组数据汇聚协议，处于无线接口协议栈的第二层。在用户平面上，PDCP子层得到来自上层的IP数据分组后，可以对IP数据分组后，可以对IP数据分组进行头压缩和加密，并递交给RLC（Radio Link Control）子层。PDCP子层还向上层提供按序提交和重复分组检测功能。在控制平面，PDCP子层为上层RRC提供信令传输服务，并实现RRC信令的加密和一致性保护，以及在反方向上实现RRC信令的解密和一致性检查。
+MAC：Medium Access Control
+BMC：Broadcas/Multicast Control,广播/组播控制，处于用户层面，会存储广播消息、计算广播业务所需的传输速率，并向RRC请求适当的CTCH/FACH资源，根据UTRAN调度消息，生成调度消息，公布调度参数并将调度消息和广播消息传送给UE。
+RSP：RSP是一种简单的基于ASCII编码的协议（远程通信协议），它使用串口，局域网或者其它任何支持半双工数据交换的通讯方式。
+ucode：为了识别物品而赋予的独特的识别码。
+
+RDMA 技术有好几种规范来达到：
+·
+InfiniBand: 这是正统，InfiniBand 设计之初就考虑了 RDMA，InfiniBand 从硬件级别保证可靠传输
+·iWARP: 基于 TCP or SCTP 做 RDMA，利用 TCP or SCTP 达到可靠传输，对网络设备的要求比较少
+·RoCE: 基于 Ethernet 做 RDMA，消耗的资源比 iWARP 少，支持的特性比 iWARP 多，需要FCoE做可靠传输。从wikipedia的评价看
+ RoCE 还是比 正统的 InfiniBand 差点。
+ 
+RESP：REdis Serialization Protocol，原本是Redis 的客户端和服务端之间采用的通信协议，后来同样可以用于C/S的软件
+inline data：有一定固定格式的BYTE or TEXT数据文件被称为inline data，这部分数据被分为两部分：定长部分和变长部分，定长部分中包含有数据的长度，真正的数据插入在定长部分的结尾处
+
+有关校验和：IP报文只校验20字节的IP包头，而ICMP校验和覆盖整个报文，ICP和UDP不仅覆盖整个报文还有12个字节的IP伪首部
+toe代码的xid：qpn(queue pair no)
